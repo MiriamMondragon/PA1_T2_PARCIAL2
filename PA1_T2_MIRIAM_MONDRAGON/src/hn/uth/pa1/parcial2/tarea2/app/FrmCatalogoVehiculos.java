@@ -8,10 +8,8 @@ package hn.uth.pa1.parcial2.tarea2.app;
 import hn.uth.pa1.parcial2.tarea2.app.objetos.Vehiculo;
 import hn.uth.pa1.parcial2.tarea2.app.repositorios.VehiculoRepositorio;
 import java.awt.Image;
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -28,6 +26,9 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
     
     VehiculoRepositorio repo = new VehiculoRepositorio();
     List<Vehiculo> vehiculos;
+    int contador = 0;
+    List<Vehiculo> vehiculosVentana;
+    List<Vehiculo> vehiculosFiltrados = new ArrayList<>();
     
     public FrmCatalogoVehiculos() {
         initComponents();
@@ -36,9 +37,8 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al bucar todos");
         }
-        cargarDatos1(vehiculos.get(0));
-        cargarDatos2(vehiculos.get(1));
-        cargarDatos3(vehiculos.get(2));
+        btnRegresar.setVisible(false);
+        vehiculosVentana = comprobarListadoDatosSiguiente(vehiculos);
     }
 
     public void cargarDatos1(Vehiculo vehiculo){
@@ -77,29 +77,86 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
         lblImagen3.setIcon(traerImagen(ruta));
     }
     
-    public double calculoPrecio(double preciobd, int anio){
-        if(anio <= (LocalDate.now().getYear() - 10)){
-            double descuento = preciobd * 0.3;
-            return preciobd - descuento;
-        }else{
-            if(anio <= (LocalDate.now().getYear() - 5)){
-                double descuento = preciobd * 0.1;
-                return preciobd - descuento;
-            }else{
-                if(anio <= (LocalDate.now().getYear() - 1)){
-                    double descuento = preciobd * 0.05;
-                    return preciobd - descuento;
-                }else{
-                    return preciobd;
-                }
-            }
-        }
-    }
-    
     public Icon traerImagen(String ruta){
         ImageIcon imagen1 = new ImageIcon(getClass().getResource(ruta));
         ImageIcon icon1 = new ImageIcon(imagen1.getImage().getScaledInstance(lblImagen1.getWidth(), lblImagen1.getHeight(), Image.SCALE_DEFAULT));
         return icon1;
+    }
+    
+    public List<Vehiculo> comprobarListadoDatosSiguiente(List<Vehiculo> vehiculos){
+        int tamanioLista;
+        List<Vehiculo> vehiculosMostrados = new ArrayList<>();
+        tamanioLista = vehiculos.size();
+        Vehiculo vehiculo = new Vehiculo();
+        if(contador < tamanioLista){
+            pan1.setVisible(true);
+            vehiculo = vehiculos.get(contador);
+            cargarDatos1(vehiculo);
+            vehiculosMostrados.add(vehiculo);
+            contador++;
+        }else{
+            pan1.setVisible(false);
+        }
+        if(contador < tamanioLista){
+            pan2.setVisible(true);
+            vehiculo = vehiculos.get(contador);
+            cargarDatos2(vehiculo);
+            vehiculosMostrados.add(vehiculo);
+            contador++;
+        }else{
+            pan2.setVisible(false);
+        }
+        if(contador < tamanioLista){
+            pan3.setVisible(true);
+            vehiculo = vehiculos.get(contador);
+            cargarDatos3(vehiculo);
+            vehiculosMostrados.add(vehiculo);
+            contador++;
+        }else{
+            pan3.setVisible(false);
+        }
+        
+        lblObjetos.setText("Objetos " + contador + "/" + tamanioLista);
+        return vehiculosMostrados;
+    }
+    
+    public List<Vehiculo> comprobarListadoDatosAnterior(List<Vehiculo> vehiculos){
+        int tamanioLista;
+        List<Vehiculo> vehiculosMostradosInverso = new ArrayList<>();
+        List<Vehiculo> vehiculosMostrados = new ArrayList<>();
+        tamanioLista = vehiculos.size();
+        Vehiculo vehiculo = new Vehiculo();
+        if(contador > 0){
+            contador-=3;
+            if(contador > 0){
+                pan3.setVisible(true);
+                vehiculo = vehiculos.get(contador);
+                cargarDatos3(vehiculo);
+                vehiculosMostradosInverso.add(vehiculo);
+            }
+        }
+        if(contador > 0){
+            pan2.setVisible(true);
+            contador--;
+            vehiculo = vehiculos.get(contador);
+            cargarDatos2(vehiculo);
+            vehiculosMostradosInverso.add(vehiculo);
+        }
+        if(contador > 0){
+            pan1.setVisible(true);
+            contador--;
+            vehiculo = vehiculos.get(contador);
+            cargarDatos1(vehiculo);
+            vehiculosMostradosInverso.add(vehiculo);
+        }
+        if(vehiculosMostradosInverso.isEmpty() == false){
+            vehiculosMostrados.add(vehiculosMostradosInverso.get(2));
+            vehiculosMostrados.add(vehiculosMostradosInverso.get(1));
+            vehiculosMostrados.add(vehiculosMostradosInverso.get(0));
+        }
+        contador +=3;
+        lblObjetos.setText("Objetos " + contador + "/" + tamanioLista);
+        return vehiculosMostrados;
     }
     
     /**
@@ -112,7 +169,7 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        lblBMW = new javax.swing.JPanel();
+        pan1 = new javax.swing.JPanel();
         lblImagen1 = new javax.swing.JLabel();
         lblName1 = new javax.swing.JLabel();
         lblModel1 = new javax.swing.JLabel();
@@ -129,7 +186,7 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
         lblMotor1 = new javax.swing.JLabel();
         lblPlaca1 = new javax.swing.JLabel();
         btnVer1 = new javax.swing.JButton();
-        lblBMW1 = new javax.swing.JPanel();
+        pan2 = new javax.swing.JPanel();
         lblImagen2 = new javax.swing.JLabel();
         lblName2 = new javax.swing.JLabel();
         lblModel2 = new javax.swing.JLabel();
@@ -146,7 +203,7 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
         lblMotor2 = new javax.swing.JLabel();
         lblPlaca2 = new javax.swing.JLabel();
         btnVer2 = new javax.swing.JButton();
-        lblBMW2 = new javax.swing.JPanel();
+        pan3 = new javax.swing.JPanel();
         lblImagen3 = new javax.swing.JLabel();
         lblName3 = new javax.swing.JLabel();
         lblModel3 = new javax.swing.JLabel();
@@ -163,12 +220,21 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
         lblMotor3 = new javax.swing.JLabel();
         lblPlaca3 = new javax.swing.JLabel();
         btnVer3 = new javax.swing.JButton();
+        btnAnterior = new javax.swing.JButton();
+        btnSiguiente = new javax.swing.JButton();
+        lblObjetos = new javax.swing.JLabel();
+        lblTitulo = new javax.swing.JLabel();
+        lblFiltrar = new javax.swing.JLabel();
+        txtFiltro = new javax.swing.JTextField();
+        btnFiltrar = new javax.swing.JButton();
+        btnRegresar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Catalogo de Vehiculos");
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        lblBMW.setBackground(new java.awt.Color(241, 238, 238));
+        pan1.setBackground(new java.awt.Color(241, 238, 238));
 
         lblImagen1.setBackground(new java.awt.Color(255, 255, 255));
         lblImagen1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -216,84 +282,91 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
         lblPlaca1.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         lblPlaca1.setText("jLabel3");
 
-        btnVer1.setBackground(new java.awt.Color(153, 153, 153));
-        btnVer1.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnVer1.setBackground(new java.awt.Color(204, 204, 204));
+        btnVer1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btnVer1.setText("Ver");
+        btnVer1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVer1ActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout lblBMWLayout = new javax.swing.GroupLayout(lblBMW);
-        lblBMW.setLayout(lblBMWLayout);
-        lblBMWLayout.setHorizontalGroup(
-            lblBMWLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(lblBMWLayout.createSequentialGroup()
+        javax.swing.GroupLayout pan1Layout = new javax.swing.GroupLayout(pan1);
+        pan1.setLayout(pan1Layout);
+        pan1Layout.setHorizontalGroup(
+            pan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pan1Layout.createSequentialGroup()
                 .addGap(64, 64, 64)
                 .addComponent(lblImagen1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(76, 76, 76)
-                .addGroup(lblBMWLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(pan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblName1)
                     .addComponent(lblModel1)
                     .addComponent(lblBrand1)
                     .addComponent(lblPrice1))
                 .addGap(39, 39, 39)
-                .addGroup(lblBMWLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(pan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblNombre1)
                     .addComponent(lblMarca1)
                     .addComponent(lblModelo1)
                     .addComponent(lblPrecio1))
-                .addGap(178, 178, 178)
-                .addGroup(lblBMWLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(119, 119, 119)
+                .addGroup(pan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblYear1)
                     .addComponent(lblmotor1)
                     .addComponent(lblKey1))
                 .addGap(32, 32, 32)
-                .addGroup(lblBMWLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(lblBMWLayout.createSequentialGroup()
+                .addGroup(pan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pan1Layout.createSequentialGroup()
                         .addComponent(lblAnio1)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(lblBMWLayout.createSequentialGroup()
-                        .addGroup(lblBMWLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pan1Layout.createSequentialGroup()
+                        .addGroup(pan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblPlaca1)
                             .addComponent(lblMotor1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 96, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                         .addComponent(btnVer1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(78, 78, 78))))
+                        .addGap(76, 76, 76))))
         );
-        lblBMWLayout.setVerticalGroup(
-            lblBMWLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(lblBMWLayout.createSequentialGroup()
-                .addGroup(lblBMWLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(lblBMWLayout.createSequentialGroup()
+        pan1Layout.setVerticalGroup(
+            pan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pan1Layout.createSequentialGroup()
+                .addGroup(pan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pan1Layout.createSequentialGroup()
                         .addGap(54, 54, 54)
-                        .addGroup(lblBMWLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnVer1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(lblBMWLayout.createSequentialGroup()
-                                .addGroup(lblBMWLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblName1)
-                                    .addComponent(lblNombre1)
-                                    .addComponent(lblYear1)
-                                    .addComponent(lblAnio1))
+                        .addGroup(pan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblName1)
+                            .addComponent(lblNombre1)
+                            .addComponent(lblYear1)
+                            .addComponent(lblAnio1))
+                        .addGroup(pan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pan1Layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
-                                .addGroup(lblBMWLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addGroup(pan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(lblBrand1)
                                     .addComponent(lblMarca1)
                                     .addComponent(lblmotor1)
                                     .addComponent(lblMotor1))
                                 .addGap(18, 18, 18)
-                                .addGroup(lblBMWLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addGroup(pan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(lblModel1)
                                     .addComponent(lblModelo1)
                                     .addComponent(lblKey1)
                                     .addComponent(lblPlaca1))
                                 .addGap(29, 29, 29)
-                                .addGroup(lblBMWLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addGroup(pan1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(lblPrice1)
-                                    .addComponent(lblPrecio1)))))
-                    .addGroup(lblBMWLayout.createSequentialGroup()
+                                    .addComponent(lblPrecio1)))
+                            .addGroup(pan1Layout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addComponent(btnVer1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(pan1Layout.createSequentialGroup()
                         .addGap(30, 30, 30)
                         .addComponent(lblImagen1, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(52, Short.MAX_VALUE))
         );
 
-        lblBMW1.setBackground(new java.awt.Color(241, 238, 238));
+        pan2.setBackground(new java.awt.Color(241, 238, 238));
 
         lblImagen2.setBackground(new java.awt.Color(255, 255, 255));
         lblImagen2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -341,86 +414,91 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
         lblPlaca2.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         lblPlaca2.setText("jLabel3");
 
-        btnVer2.setBackground(new java.awt.Color(153, 153, 153));
-        btnVer2.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnVer2.setBackground(new java.awt.Color(204, 204, 204));
+        btnVer2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btnVer2.setText("Ver");
+        btnVer2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVer2ActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout lblBMW1Layout = new javax.swing.GroupLayout(lblBMW1);
-        lblBMW1.setLayout(lblBMW1Layout);
-        lblBMW1Layout.setHorizontalGroup(
-            lblBMW1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(lblBMW1Layout.createSequentialGroup()
+        javax.swing.GroupLayout pan2Layout = new javax.swing.GroupLayout(pan2);
+        pan2.setLayout(pan2Layout);
+        pan2Layout.setHorizontalGroup(
+            pan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pan2Layout.createSequentialGroup()
                 .addGap(64, 64, 64)
                 .addComponent(lblImagen2, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(76, 76, 76)
-                .addGroup(lblBMW1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(pan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblName2)
                     .addComponent(lblModel2)
                     .addComponent(lblBrand2)
                     .addComponent(lblPrice2))
                 .addGap(39, 39, 39)
-                .addGroup(lblBMW1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(pan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblNombre2)
                     .addComponent(lblMarca2)
                     .addComponent(lblModelo2)
                     .addComponent(lblPrecio2))
-                .addGap(178, 178, 178)
-                .addGroup(lblBMW1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(115, 115, 115)
+                .addGroup(pan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblYear2)
                     .addComponent(lblmotor2)
                     .addComponent(lblKey2))
                 .addGap(32, 32, 32)
-                .addGroup(lblBMW1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(lblBMW1Layout.createSequentialGroup()
+                .addGroup(pan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pan2Layout.createSequentialGroup()
                         .addComponent(lblAnio2)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(lblBMW1Layout.createSequentialGroup()
-                        .addGroup(lblBMW1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pan2Layout.createSequentialGroup()
+                        .addGroup(pan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblPlaca2)
                             .addComponent(lblMotor2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnVer2, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(78, 78, 78))))
         );
-        lblBMW1Layout.setVerticalGroup(
-            lblBMW1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(lblBMW1Layout.createSequentialGroup()
-                .addGroup(lblBMW1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(lblBMW1Layout.createSequentialGroup()
+        pan2Layout.setVerticalGroup(
+            pan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pan2Layout.createSequentialGroup()
+                .addGroup(pan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pan2Layout.createSequentialGroup()
                         .addGap(54, 54, 54)
-                        .addGroup(lblBMW1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(pan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblName2)
                             .addComponent(lblNombre2)
                             .addComponent(lblYear2)
                             .addComponent(lblAnio2))
-                        .addGroup(lblBMW1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(lblBMW1Layout.createSequentialGroup()
+                        .addGroup(pan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pan2Layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
-                                .addGroup(lblBMW1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addGroup(pan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(lblBrand2)
                                     .addComponent(lblMarca2)
                                     .addComponent(lblmotor2)
                                     .addComponent(lblMotor2))
                                 .addGap(18, 18, 18)
-                                .addGroup(lblBMW1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addGroup(pan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(lblModel2)
                                     .addComponent(lblModelo2)
                                     .addComponent(lblKey2)
                                     .addComponent(lblPlaca2))
                                 .addGap(29, 29, 29)
-                                .addGroup(lblBMW1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addGroup(pan2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(lblPrice2)
                                     .addComponent(lblPrecio2)))
-                            .addGroup(lblBMW1Layout.createSequentialGroup()
+                            .addGroup(pan2Layout.createSequentialGroup()
                                 .addGap(5, 5, 5)
                                 .addComponent(btnVer2, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(lblBMW1Layout.createSequentialGroup()
+                    .addGroup(pan2Layout.createSequentialGroup()
                         .addGap(30, 30, 30)
                         .addComponent(lblImagen2, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(52, Short.MAX_VALUE))
         );
 
-        lblBMW2.setBackground(new java.awt.Color(241, 238, 238));
+        pan3.setBackground(new java.awt.Color(241, 238, 238));
 
         lblImagen3.setBackground(new java.awt.Color(255, 255, 255));
         lblImagen3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -468,113 +546,195 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
         lblPlaca3.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         lblPlaca3.setText("jLabel3");
 
-        btnVer3.setBackground(new java.awt.Color(153, 153, 153));
-        btnVer3.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnVer3.setBackground(new java.awt.Color(204, 204, 204));
+        btnVer3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btnVer3.setText("Ver");
+        btnVer3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVer3ActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout lblBMW2Layout = new javax.swing.GroupLayout(lblBMW2);
-        lblBMW2.setLayout(lblBMW2Layout);
-        lblBMW2Layout.setHorizontalGroup(
-            lblBMW2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(lblBMW2Layout.createSequentialGroup()
+        javax.swing.GroupLayout pan3Layout = new javax.swing.GroupLayout(pan3);
+        pan3.setLayout(pan3Layout);
+        pan3Layout.setHorizontalGroup(
+            pan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pan3Layout.createSequentialGroup()
                 .addGap(64, 64, 64)
                 .addComponent(lblImagen3, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(76, 76, 76)
-                .addGroup(lblBMW2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(pan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblName3)
                     .addComponent(lblModel3)
                     .addComponent(lblBrand3)
                     .addComponent(lblPrice3))
                 .addGap(39, 39, 39)
-                .addGroup(lblBMW2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(pan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblNombre3)
                     .addComponent(lblMarca3)
                     .addComponent(lblModelo3)
                     .addComponent(lblPrecio3))
-                .addGap(178, 178, 178)
-                .addGroup(lblBMW2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(119, 119, 119)
+                .addGroup(pan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblYear3)
                     .addComponent(lblmotor3)
                     .addComponent(lblKey3))
                 .addGap(32, 32, 32)
-                .addGroup(lblBMW2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(lblBMW2Layout.createSequentialGroup()
-                        .addComponent(lblAnio3)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(lblBMW2Layout.createSequentialGroup()
-                        .addGroup(lblBMW2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblPlaca3)
-                            .addComponent(lblMotor3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 96, Short.MAX_VALUE)
-                        .addComponent(btnVer3, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(78, 78, 78))))
+                .addGroup(pan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblAnio3)
+                    .addComponent(lblPlaca3)
+                    .addComponent(lblMotor3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addComponent(btnVer3, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(76, 76, 76))
         );
-        lblBMW2Layout.setVerticalGroup(
-            lblBMW2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(lblBMW2Layout.createSequentialGroup()
-                .addGroup(lblBMW2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(lblBMW2Layout.createSequentialGroup()
+        pan3Layout.setVerticalGroup(
+            pan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pan3Layout.createSequentialGroup()
+                .addGroup(pan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pan3Layout.createSequentialGroup()
                         .addGap(54, 54, 54)
-                        .addGroup(lblBMW2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnVer3, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(lblBMW2Layout.createSequentialGroup()
-                                .addGroup(lblBMW2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblName3)
-                                    .addComponent(lblNombre3)
-                                    .addComponent(lblYear3)
-                                    .addComponent(lblAnio3))
-                                .addGap(18, 18, 18)
-                                .addGroup(lblBMW2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblBrand3)
-                                    .addComponent(lblMarca3)
-                                    .addComponent(lblmotor3)
-                                    .addComponent(lblMotor3))
-                                .addGap(18, 18, 18)
-                                .addGroup(lblBMW2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblModel3)
-                                    .addComponent(lblModelo3)
-                                    .addComponent(lblKey3)
-                                    .addComponent(lblPlaca3))
-                                .addGap(29, 29, 29)
-                                .addGroup(lblBMW2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblPrice3)
-                                    .addComponent(lblPrecio3)))))
-                    .addGroup(lblBMW2Layout.createSequentialGroup()
+                        .addGroup(pan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblName3)
+                            .addComponent(lblNombre3)
+                            .addComponent(lblYear3)
+                            .addComponent(lblAnio3))
+                        .addGap(18, 18, 18)
+                        .addGroup(pan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblBrand3)
+                            .addComponent(lblMarca3)
+                            .addComponent(lblmotor3)
+                            .addComponent(lblMotor3))
+                        .addGap(18, 18, 18)
+                        .addGroup(pan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblModel3)
+                            .addComponent(lblModelo3)
+                            .addComponent(lblKey3)
+                            .addComponent(lblPlaca3))
+                        .addGap(29, 29, 29)
+                        .addGroup(pan3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblPrice3)
+                            .addComponent(lblPrecio3)))
+                    .addGroup(pan3Layout.createSequentialGroup()
                         .addGap(30, 30, 30)
-                        .addComponent(lblImagen3, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblImagen3, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pan3Layout.createSequentialGroup()
+                        .addGap(73, 73, 73)
+                        .addComponent(btnVer3, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(34, Short.MAX_VALUE))
         );
+
+        btnAnterior.setBackground(new java.awt.Color(204, 204, 204));
+        btnAnterior.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnAnterior.setText("Anterior");
+        btnAnterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnteriorActionPerformed(evt);
+            }
+        });
+
+        btnSiguiente.setBackground(new java.awt.Color(204, 204, 204));
+        btnSiguiente.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnSiguiente.setText("Siguiente");
+        btnSiguiente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSiguienteActionPerformed(evt);
+            }
+        });
+
+        lblObjetos.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        lblObjetos.setText("Objetos 3/5");
+
+        lblTitulo.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        lblTitulo.setText("Catálogo de Vehículos");
+
+        lblFiltrar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lblFiltrar.setText("Filtrar por Año:");
+
+        btnFiltrar.setBackground(new java.awt.Color(204, 204, 204));
+        btnFiltrar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        btnFiltrar.setText("Buscar");
+        btnFiltrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFiltrarActionPerformed(evt);
+            }
+        });
+
+        btnRegresar.setBackground(new java.awt.Color(204, 204, 204));
+        btnRegresar.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(64, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(lblBMW2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(lblBMW, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblBMW1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGap(65, 65, 65))
+                .addGap(145, 145, 145)
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblFiltrar)
+                .addGap(18, 18, 18)
+                .addComponent(txtFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(84, 84, 84))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(332, 332, 332)
+                        .addComponent(btnAnterior, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(129, 129, 129)
+                        .addComponent(lblObjetos)
+                        .addGap(123, 123, 123)
+                        .addComponent(btnSiguiente)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnRegresar))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(115, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(pan3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(pan2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(pan1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                .addGap(120, 120, 120))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(58, 58, 58)
-                .addComponent(lblBMW, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(lblFiltrar, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtFiltro)
+                            .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                    .addComponent(lblTitulo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addComponent(pan1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblBMW1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pan2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(lblBMW2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addComponent(pan3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnAnterior, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnSiguiente, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblObjetos)
+                        .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(24, 24, 24))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -583,6 +743,101 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteActionPerformed
+        // TODO add your handling code here:
+        List<Vehiculo> vehiculosRecibidos = new ArrayList<>();
+        if(btnRegresar.isVisible() == false){
+            if(contador < vehiculos.size()){
+            vehiculosRecibidos = comprobarListadoDatosSiguiente(vehiculos);
+                if(vehiculosRecibidos.isEmpty() == false){
+                    vehiculosVentana.clear();
+                    vehiculosVentana = vehiculosRecibidos;
+                }
+            }
+        }else {
+            if(contador < vehiculosFiltrados.size()){
+            vehiculosRecibidos = comprobarListadoDatosSiguiente(vehiculosFiltrados);
+                if(vehiculosRecibidos.isEmpty() == false){
+                    vehiculosVentana.clear();
+                    vehiculosVentana = vehiculosRecibidos;
+                }
+            }
+        }
+    }//GEN-LAST:event_btnSiguienteActionPerformed
+
+    private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
+        // TODO add your handling code here:
+        List<Vehiculo> vehiculosRecibidos = new ArrayList<>();
+        if(btnRegresar.isVisible() == false){
+           if(contador > 0){
+            vehiculosRecibidos = comprobarListadoDatosAnterior(vehiculos);
+                if(vehiculosRecibidos.isEmpty() == false){
+                    vehiculosVentana.clear();
+                    vehiculosVentana = vehiculosRecibidos;
+                }
+            } 
+        }else {
+            if(contador > 0){
+            vehiculosRecibidos = comprobarListadoDatosAnterior(vehiculosFiltrados);
+                if(vehiculosRecibidos.isEmpty() == false){
+                    vehiculosVentana.clear();
+                    vehiculosVentana = vehiculosRecibidos;
+                }
+            } 
+        }
+            
+    }//GEN-LAST:event_btnAnteriorActionPerformed
+
+    private void btnVer1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer1ActionPerformed
+        // TODO add your handling code here:
+        Vehiculo vehiculo;
+        vehiculo = vehiculosVentana.get(0);
+        FrmDetallesVehiculo detalles = new FrmDetallesVehiculo(vehiculo);
+        util.mostrarFormulario(detalles);
+    }//GEN-LAST:event_btnVer1ActionPerformed
+
+    private void btnVer2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer2ActionPerformed
+        // TODO add your handling code here:
+        Vehiculo vehiculo;
+        vehiculo = vehiculosVentana.get(1);
+        FrmDetallesVehiculo detalles = new FrmDetallesVehiculo(vehiculo);
+        util.mostrarFormulario(detalles);
+    }//GEN-LAST:event_btnVer2ActionPerformed
+
+    private void btnVer3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVer3ActionPerformed
+        // TODO add your handling code here:
+        Vehiculo vehiculo;
+        vehiculo = vehiculosVentana.get(2);
+        FrmDetallesVehiculo detalles = new FrmDetallesVehiculo(vehiculo);
+        util.mostrarFormulario(detalles);
+    }//GEN-LAST:event_btnVer3ActionPerformed
+
+    private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
+        // TODO add your handling code here:
+        vehiculosFiltrados.clear();
+        int filtro = Integer.parseInt(txtFiltro.getText());
+        for (Vehiculo vehiculoTemp : vehiculos) {
+            if(vehiculoTemp.getAnio() == filtro){
+                vehiculosFiltrados.add(vehiculoTemp);
+            }   
+        }
+        if(vehiculosFiltrados.isEmpty() == false){
+            contador = 0;
+            vehiculosVentana = comprobarListadoDatosSiguiente(vehiculosFiltrados);
+            btnRegresar.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(this, "No se encontraron vehículos del año " + filtro);
+        }
+    }//GEN-LAST:event_btnFiltrarActionPerformed
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        // TODO add your handling code here:
+        btnRegresar.setVisible(false);
+        vehiculosFiltrados.clear();
+        contador = 0;
+        vehiculosVentana = comprobarListadoDatosSiguiente(vehiculos);
+    }//GEN-LAST:event_btnRegresarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -620,6 +875,10 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAnterior;
+    private javax.swing.JButton btnFiltrar;
+    private javax.swing.JButton btnRegresar;
+    private javax.swing.JButton btnSiguiente;
     private javax.swing.JButton btnVer1;
     private javax.swing.JButton btnVer2;
     private javax.swing.JButton btnVer3;
@@ -627,12 +886,10 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
     private javax.swing.JLabel lblAnio1;
     private javax.swing.JLabel lblAnio2;
     private javax.swing.JLabel lblAnio3;
-    private javax.swing.JPanel lblBMW;
-    private javax.swing.JPanel lblBMW1;
-    private javax.swing.JPanel lblBMW2;
     private javax.swing.JLabel lblBrand1;
     private javax.swing.JLabel lblBrand2;
     private javax.swing.JLabel lblBrand3;
+    private javax.swing.JLabel lblFiltrar;
     private javax.swing.JLabel lblImagen1;
     private javax.swing.JLabel lblImagen2;
     private javax.swing.JLabel lblImagen3;
@@ -657,6 +914,7 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
     private javax.swing.JLabel lblNombre1;
     private javax.swing.JLabel lblNombre2;
     private javax.swing.JLabel lblNombre3;
+    private javax.swing.JLabel lblObjetos;
     private javax.swing.JLabel lblPlaca1;
     private javax.swing.JLabel lblPlaca2;
     private javax.swing.JLabel lblPlaca3;
@@ -666,11 +924,16 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
     private javax.swing.JLabel lblPrice1;
     private javax.swing.JLabel lblPrice2;
     private javax.swing.JLabel lblPrice3;
+    private javax.swing.JLabel lblTitulo;
     private javax.swing.JLabel lblYear1;
     private javax.swing.JLabel lblYear2;
     private javax.swing.JLabel lblYear3;
     private javax.swing.JLabel lblmotor1;
     private javax.swing.JLabel lblmotor2;
     private javax.swing.JLabel lblmotor3;
+    private javax.swing.JPanel pan1;
+    private javax.swing.JPanel pan2;
+    private javax.swing.JPanel pan3;
+    private javax.swing.JTextField txtFiltro;
     // End of variables declaration//GEN-END:variables
 }
