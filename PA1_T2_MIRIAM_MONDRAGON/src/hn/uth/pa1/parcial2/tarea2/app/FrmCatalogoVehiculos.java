@@ -858,7 +858,7 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "No se encontraron vehículos del año " + filtro, "Sin Registros", JOptionPane.INFORMATION_MESSAGE);
             }
         }catch(Exception e){
-            JOptionPane.showMessageDialog(this, txtFiltro.getText() + " no es un número válido", "Campo mal llenado", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, txtFiltro.getText() + " no es un año válido", "Campo mal llenado", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnFiltrarActionPerformed
 
