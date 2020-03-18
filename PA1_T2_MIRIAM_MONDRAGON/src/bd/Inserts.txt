@@ -1,0 +1,33 @@
+-- Insert de 8 registros a la tabla VEHICULOS de la bd UTH --
+
+INSERT INTO UTH.VEHICULOS (PLACA, MODELO, MARCA, ANIO, MOTOR, PRECIO, NOMBRE, DESCRIPCION, IMAGEN) 
+VALUES 
+('PDP0101', 'BMW01', 'BMW', 2018, '2.0', 200000.0, 'Fast 1', '<html>Vehículo comprado en agencia, <P><html>poco uso con 90 mil millas.<P>', '/Imagenes/BMW.jpg');
+
+INSERT INTO UTH.VEHICULOS (PLACA, MODELO, MARCA, ANIO, MOTOR, PRECIO, NOMBRE, DESCRIPCION, IMAGEN) 
+VALUES 
+('PHD2525', 'Tacoma', 'Toyota', 2014, '2.0', 400000.0, 'Toy 1', '<html>Vehículo comprado en agencia, <P><html>usado con 100 mil millas.<P>', '/Imagenes/ToyotaTacoma.jpg');
+
+INSERT INTO UTH.VEHICULOS (PLACA, MODELO, MARCA, ANIO, MOTOR, PRECIO, NOMBRE, DESCRIPCION, IMAGEN) 
+VALUES 
+('PDZ9001', 'Sorento', 'Kia', 2012, '2.0', 300000.0, 'Sor 1', '<html>Vehículo con poco <P><html>uso 90 mil millas y en buen estado.<P>', '/Imagenes/KiaSorento.jpg');
+
+INSERT INTO UTH.VEHICULOS (PLACA, MODELO, MARCA, ANIO, MOTOR, PRECIO, NOMBRE, DESCRIPCION, IMAGEN) 
+VALUES 
+('PDP0102', 'Murcielago', 'Lamborgini', 2017, '3.0', 1500000.0, 'Lambo 1', '<html>Vehículo en buen estado con asientos de <P><html>cuero, 50 mil millas de uso.<P>', '/Imagenes/LamboMurcielago.jpg');
+
+INSERT INTO UTH.VEHICULOS (PLACA, MODELO, MARCA, ANIO, MOTOR, PRECIO, NOMBRE, DESCRIPCION, IMAGEN) 
+VALUES 
+('PDP0103', 'Shelby', 'Mustang', 2019, '3.0', 1600000.0, 'Mustang 1', '<html>Vehículo en buen estado comprado de <P><html>agencia, 20 mil millas de uso.<P>', '/Imagenes/MustangShelby.jpg');
+
+INSERT INTO UTH.VEHICULOS (PLACA, MODELO, MARCA, ANIO, MOTOR, PRECIO, NOMBRE, DESCRIPCION, IMAGEN) 
+VALUES 
+('PDP0104', 'Raptor', 'Ford', 2018, '3.0', 1200000.0, 'Ford 1', '<html>Vehículo todo terreno comprado en <P><html>agencia, 50 mil millas de uso.<P>', '/Imagenes/FordRaptor.jpg');
+
+INSERT INTO UTH.VEHICULOS (PLACA, MODELO, MARCA, ANIO, MOTOR, PRECIO, NOMBRE, DESCRIPCION, IMAGEN) 
+VALUES 
+('PDP0105', 'Camaro', 'Chevrolet', 1998, '3.0', 1500000.0, 'Chevrolet 1', '<html>Vehículo nuevo poco uso, comprado en <P><html>agencia, 50 mil millas de uso.<P>', '/Imagenes/ChevroletCamaro.jpg');
+
+INSERT INTO UTH.VEHICULOS (PLACA, MODELO, MARCA, ANIO, MOTOR, PRECIO, NOMBRE, DESCRIPCION, IMAGEN) 
+VALUES 
+('PDP0106', 'Corolla', 'Toyota', 1997, '1.0', 200000.0, 'Corolla 1', '<html>Vehículo es buen estado, con<P><html>bastante uso, 500 mil millas.<P>', '/Imagenes/ToyotaCorolla.jpg');

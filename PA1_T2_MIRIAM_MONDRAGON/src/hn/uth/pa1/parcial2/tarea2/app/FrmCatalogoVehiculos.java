@@ -35,7 +35,7 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
         try {
             this.vehiculos = repo.buscarTodo();
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error al bucar todos");
+            JOptionPane.showMessageDialog(this, "Error al buscar todos", "Conexión BD", JOptionPane.ERROR_MESSAGE);
         }
         btnRegresar.setVisible(false);
         vehiculosVentana = comprobarListadoDatosSiguiente(vehiculos);
@@ -50,7 +50,12 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
         lblMotor1.setText(vehiculo.getMotor());
         lblPlaca1.setText(vehiculo.getPlaca());
         String ruta = vehiculo.getImagen();
-        lblImagen1.setIcon(traerImagen(ruta));
+        try {
+            lblImagen1.setIcon(traerImagen(ruta));
+        } catch (Exception e) {
+            lblImagen1.setIcon(traerImagen("/Imagenes/ImageNotFound.jpg"));
+        }
+        
     }
     
     public void cargarDatos2(Vehiculo vehiculo){
@@ -62,7 +67,11 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
         lblMotor2.setText(vehiculo.getMotor());
         lblPlaca2.setText(vehiculo.getPlaca());
         String ruta = vehiculo.getImagen();
-        lblImagen2.setIcon(traerImagen(ruta));
+        try {
+            lblImagen2.setIcon(traerImagen(ruta));
+        } catch (Exception e) {
+            lblImagen2.setIcon(traerImagen("/Imagenes/ImageNotFound.jpg"));
+        }
     }
     
     public void cargarDatos3(Vehiculo vehiculo){
@@ -74,7 +83,11 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
         lblMotor3.setText(vehiculo.getMotor());
         lblPlaca3.setText(vehiculo.getPlaca());
         String ruta = vehiculo.getImagen();
-        lblImagen3.setIcon(traerImagen(ruta));
+        try {
+            lblImagen3.setIcon(traerImagen(ruta));
+        } catch (Exception e) {
+            lblImagen3.setIcon(traerImagen("/Imagenes/ImageNotFound.jpg"));
+        }
     }
     
     public Icon traerImagen(String ruta){
@@ -88,35 +101,37 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
         List<Vehiculo> vehiculosMostrados = new ArrayList<>();
         tamanioLista = vehiculos.size();
         Vehiculo vehiculo = new Vehiculo();
-        if(contador < tamanioLista){
+        if((contador+1) <= tamanioLista){
+            if(contador != 0){
+                contador++;
+            }
             pan1.setVisible(true);
             vehiculo = vehiculos.get(contador);
             cargarDatos1(vehiculo);
             vehiculosMostrados.add(vehiculo);
-            contador++;
         }else{
             pan1.setVisible(false);
         }
-        if(contador < tamanioLista){
+        if((contador +1) < tamanioLista){
+            contador++;
             pan2.setVisible(true);
             vehiculo = vehiculos.get(contador);
             cargarDatos2(vehiculo);
             vehiculosMostrados.add(vehiculo);
-            contador++;
         }else{
             pan2.setVisible(false);
         }
-        if(contador < tamanioLista){
+        if((contador +1) < tamanioLista){
+            contador++;
             pan3.setVisible(true);
             vehiculo = vehiculos.get(contador);
             cargarDatos3(vehiculo);
             vehiculosMostrados.add(vehiculo);
-            contador++;
         }else{
             pan3.setVisible(false);
         }
         
-        lblObjetos.setText("Objetos " + contador + "/" + tamanioLista);
+        lblObjetos.setText("Objetos " + (contador+1) + "/" + tamanioLista);
         return vehiculosMostrados;
     }
     
@@ -127,7 +142,19 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
         tamanioLista = vehiculos.size();
         Vehiculo vehiculo = new Vehiculo();
         if(contador > 0){
-            contador-=3;
+            if((contador+1) == (vehiculos.size())){
+                if((contador+1)%3 == 0){
+                    contador -=3;
+                }else{
+                    if(((contador+1)-2)%3 == 0){
+                        contador -=2;
+                    }else{
+                        contador -=1;
+                    }
+                }
+            }else{
+                contador-=3;
+            }
             if(contador > 0){
                 pan3.setVisible(true);
                 vehiculo = vehiculos.get(contador);
@@ -154,8 +181,8 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
             vehiculosMostrados.add(vehiculosMostradosInverso.get(1));
             vehiculosMostrados.add(vehiculosMostradosInverso.get(0));
         }
-        contador +=3;
-        lblObjetos.setText("Objetos " + contador + "/" + tamanioLista);
+        contador+=2;
+        lblObjetos.setText("Objetos " + (contador+1) + "/" + tamanioLista);
         return vehiculosMostrados;
     }
     
@@ -697,7 +724,7 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap(115, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(pan3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pan3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(pan2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(pan1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
@@ -714,20 +741,20 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
                             .addComponent(txtFiltro)
                             .addComponent(btnFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                     .addComponent(lblTitulo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pan1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pan2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pan3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnAnterior, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnSiguiente, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblObjetos)
                         .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(24, 24, 24))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -748,7 +775,7 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
         // TODO add your handling code here:
         List<Vehiculo> vehiculosRecibidos = new ArrayList<>();
         if(btnRegresar.isVisible() == false){
-            if(contador < vehiculos.size()){
+            if((contador+1) < vehiculos.size()){
             vehiculosRecibidos = comprobarListadoDatosSiguiente(vehiculos);
                 if(vehiculosRecibidos.isEmpty() == false){
                     vehiculosVentana.clear();
@@ -756,7 +783,7 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
                 }
             }
         }else {
-            if(contador < vehiculosFiltrados.size()){
+            if((contador+1) < vehiculosFiltrados.size()){
             vehiculosRecibidos = comprobarListadoDatosSiguiente(vehiculosFiltrados);
                 if(vehiculosRecibidos.isEmpty() == false){
                     vehiculosVentana.clear();
@@ -770,7 +797,7 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
         // TODO add your handling code here:
         List<Vehiculo> vehiculosRecibidos = new ArrayList<>();
         if(btnRegresar.isVisible() == false){
-           if(contador > 0){
+           if((contador-3) > 0){
             vehiculosRecibidos = comprobarListadoDatosAnterior(vehiculos);
                 if(vehiculosRecibidos.isEmpty() == false){
                     vehiculosVentana.clear();
@@ -778,7 +805,7 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
                 }
             } 
         }else {
-            if(contador > 0){
+            if((contador-3) > 0){
             vehiculosRecibidos = comprobarListadoDatosAnterior(vehiculosFiltrados);
                 if(vehiculosRecibidos.isEmpty() == false){
                     vehiculosVentana.clear();
@@ -815,19 +842,23 @@ public class FrmCatalogoVehiculos extends javax.swing.JFrame {
 
     private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
         // TODO add your handling code here:
-        vehiculosFiltrados.clear();
-        int filtro = Integer.parseInt(txtFiltro.getText());
-        for (Vehiculo vehiculoTemp : vehiculos) {
-            if(vehiculoTemp.getAnio() == filtro){
-                vehiculosFiltrados.add(vehiculoTemp);
-            }   
-        }
-        if(vehiculosFiltrados.isEmpty() == false){
-            contador = 0;
-            vehiculosVentana = comprobarListadoDatosSiguiente(vehiculosFiltrados);
-            btnRegresar.setVisible(true);
-        }else{
-            JOptionPane.showMessageDialog(this, "No se encontraron vehículos del año " + filtro);
+        try{
+            vehiculosFiltrados.clear();
+            int filtro = Integer.parseInt(txtFiltro.getText());
+            for (Vehiculo vehiculoTemp : vehiculos) {
+                if(vehiculoTemp.getAnio() == filtro){
+                    vehiculosFiltrados.add(vehiculoTemp);
+                }   
+            }
+            if(vehiculosFiltrados.isEmpty() == false){
+                contador = 0;
+                vehiculosVentana = comprobarListadoDatosSiguiente(vehiculosFiltrados);
+                btnRegresar.setVisible(true);
+            }else{
+                JOptionPane.showMessageDialog(this, "No se encontraron vehículos del año " + filtro, "Sin Registros", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, txtFiltro.getText() + " no es un número válido", "Campo mal llenado", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnFiltrarActionPerformed
 

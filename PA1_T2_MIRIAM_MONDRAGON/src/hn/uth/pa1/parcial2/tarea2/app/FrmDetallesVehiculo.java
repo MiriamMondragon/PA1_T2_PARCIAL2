@@ -48,7 +48,11 @@ public class FrmDetallesVehiculo extends javax.swing.JFrame {
             lblAnios.setText(" el vehículo tiene " + (LocalDate.now().getYear() - vehiculo.getAnio()) + " años");
         }
         String ruta = vehiculo.getImagen();
-        lblImagen.setIcon(traerImagen(ruta));
+        try {
+            lblImagen.setIcon(traerImagen(ruta));
+        } catch (Exception e) {
+            lblImagen.setIcon(traerImagen("/Imagenes/ImageNotFound.jpg"));
+        }
     }
     
     public Icon traerImagen(String ruta){
@@ -313,7 +317,7 @@ public class FrmDetallesVehiculo extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(74, 74, 74)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addContainerGap(86, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -322,7 +326,7 @@ public class FrmDetallesVehiculo extends javax.swing.JFrame {
                 .addComponent(lblTitulo)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(97, Short.MAX_VALUE))
+                .addContainerGap(136, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
